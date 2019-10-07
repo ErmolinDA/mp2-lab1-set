@@ -6,6 +6,7 @@
 // Битовое поле
 
 #include "tbitfield.h"
+#include <iostream>
 
 TBitField::TBitField(int len)
 {
@@ -85,21 +86,25 @@ int TBitField::GetBit(const int n) const // получить значение б
 
 TBitField& TBitField::operator=(const TBitField &bf) // присваивание
 {
-	BitLen = bf.BitLen;
-	if (MemLen != bf.BitLen)
+	if (this != &bf)
 	{
-		MemLen = bf.MemLen;
-		delete[] pMem;
-		pMem = new TELEM[MemLen];
+		BitLen = bf.BitLen;
+		if (MemLen != bf.BitLen)
+		{
+			MemLen = bf.MemLen;
+			delete[] pMem;
+			pMem = new TELEM[MemLen];
+		}
+		for (int i = 0; i < MemLen; i++)
+			pMem[i] = bf.pMem[i];
 	}
-	for (int i = 0; i < MemLen; i++)
-		pMem[i] = bf.pMem[i];
 	return *this;
 }
 
 bool TBitField::operator==(const TBitField &bf) const // сравнение
 {
-	if (BitLen == bf.BitLen) {
+	if ((BitLen == bf.BitLen) && (MemLen == bf.MemLen))
+	{
 		for (int i = 0; i < MemLen; i++) {
 			if (pMem[i] != bf.pMem[i])
 				return false;
@@ -112,30 +117,59 @@ bool TBitField::operator==(const TBitField &bf) const // сравнение
 
 bool TBitField::operator!=(const TBitField &bf) const // сравнение
 {
-	return !(*this == bf);
+	if (*this == bf)
+		return false;
+	else
+		return true;
 }
 
 TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 {
 	TBitField tmp(BitLen);
+	if (BitLen < bf.BitLen)
+	{
+		tmp = bf;
+	}
+	else {
+		MemLen = bf.MemLen;
+		tmp = *this;
+	}
 	for (int i = 0; i < MemLen; i++)
-		tmp.pMem[i] = bf.pMem[i] | pMem[i];
+	{
+		tmp.pMem[i] = pMem[i] | bf.pMem[i];
+	}
 	return tmp;
+
 }
 
 TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 {
 	TBitField tmp(BitLen);
-	for (int i = 0; i < MemLen; i++)
-		tmp.pMem[i] = bf.pMem[i] & pMem[i];
+	if (BitLen < bf.BitLen)
+	{
+		tmp = bf;
+	}
+	else {
+		MemLen = bf.MemLen;
+		tmp = *this;
+	}
+	for (int i = 0; i < MemLen; i++) {
+		tmp.pMem[i] = pMem[i] & bf.pMem[i];
+	}
 	return tmp;
 }
 
 TBitField TBitField::operator~(void) // отрицание
 {
+
 	TBitField tmp(BitLen);
-	for (int i = 0; i < MemLen; i++)
-		tmp.pMem[i] = ~pMem[i];
+	for (int i = 0; i < BitLen; i++)
+	{
+		if (GetBit(i) == 0)
+		{
+			tmp.SetBit(i);
+		}
+	}
 	return tmp;
 }
 
