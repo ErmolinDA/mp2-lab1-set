@@ -13,7 +13,7 @@
 #ifndef USE_SET // Использовать класс TBitField
 
 #include "tbitfield.h"
-
+/*
 int main()
 {
   int n, m, k, count;
@@ -51,7 +51,7 @@ int main()
   cout << endl;
   cout << "В первых " << n << " числах " << count << " простых" << endl;
 }
-#else
+#else*/
 
 #include "tset.h"
 

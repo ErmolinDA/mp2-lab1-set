@@ -24,7 +24,7 @@ public:
   int GetMaxPower(void) const;     // максимальная мощность множества
   void InsElem(const int Elem);       // включить элемент в множество
   void DelElem(const int Elem);       // удалить элемент из множества
-  bool IsMember(const int Elem) const; // проверить наличие элемента в множестве
+  int IsMember(const int Elem) const; // проверить наличие элемента в множестве
   // теоретико-множественные операции
   bool operator== (const TSet &s) const; // сравнение
   bool operator!= (const TSet &s) const; // сравнение
